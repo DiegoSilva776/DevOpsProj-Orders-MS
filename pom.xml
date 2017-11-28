@@ -63,12 +63,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
 		</dependency>
-		
-		<dependency>
-		    <groupId>biz.paluch.logging</groupId>
-		    <artifactId>logstash-gelf</artifactId>
-		    <version>1.7.0</version>
-		</dependency>
 		<!-- ./Logging -->
 
 	</dependencies>
@@ -89,7 +83,7 @@
 	                <archive>
 	                    <index>true</index>
 	                    <manifest>
-	                        <mainClass>src.main.java.com.dms.devops.Application</mainClass>
+	                        <mainClass>com.dms.devops.Application</mainClass>
 	                    </manifest>
 	                </archive>
 	                <testFailureIgnore>true</testFailureIgnore>
