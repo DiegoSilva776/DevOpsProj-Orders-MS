@@ -57,77 +57,35 @@ public class PedidoRestService {
 			throw new RuntimeException(Messages.MSG_ERROR_CRAZY_ERROR_OCURRED);
 		}
 
-		if (verifyClient(item.getIdCliente())) {
-			// Se o pedido já existe, adiciona o novo item
-			boolean pedidoNovo = true;
+		// Se o pedido já existe, adiciona o novo item
+		boolean pedidoNovo = true;
 				
-			for (Pedido pedido : PedidoRestService.pedidosMock) {
+		for (Pedido pedido : PedidoRestService.pedidosMock) {
 
-				if (pedido.getId() == item.getIdPedido()) {
-					pedido.getItems().add(item.getItem());
-					pedidoNovo = false;
-				}
-			}
-
-			// Cria um novo pedido com o item, se o pedido ainda não existir
-			Pedido pedido = new Pedido();
-
-			if (pedidoNovo) {
-				pedido.setId(item.getIdPedido());
-				pedido.setDataPedido(new Date());
-				pedido.setIdCliente(item.getIdCliente());
+			if (pedido.getId() == item.getIdPedido()) {
 				pedido.getItems().add(item.getItem());
-				pedido.setStatus(StatusPedido.ABERTO);
-
-				PedidoRestService.pedidosMock.add(pedido);
+				pedidoNovo = false;
 			}
-
-			logger.info("\n\n>O cliente " + item.getIdCliente() +
-						" adicionou o produto " + item.getItem().getIdProduto() +
-						" ao pedido " + item.getIdPedido() + "\n");
-
-			return pedido;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Verify the existence of the client by making a request to an endpoint of the ms_users micro service
-	 */
-	private Boolean verifyClient(long clientId) {
-		boolean clientVerified = true;
-
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			UrlBuilder urlBuilder = new UrlBuilder();
-
-			ResponseEntity<Cliente> response = restTemplate.exchange(
-				urlBuilder.getUserByIdUrl(clientId),
-				HttpMethod.GET,
-				null,
-				Cliente.class
-			);
-
-			// Verify the response
-			Cliente cliente = response.getBody();
-
-			// Verify if the given clientId is ok in the ms_user micro service
-			if (cliente != null) {
-
-				if (cliente.getId() != clientId) {
-					clientVerified = false;
-				}
-			} else {
-				clientVerified = false;
-			}
-		} catch(Exception e) {
-			clientVerified = false;
-
-			logger.info(e.getMessage());
 		}
 
-		return false;
+		// Cria um novo pedido com o item, se o pedido ainda não existir
+		Pedido pedido = new Pedido();
+
+		if (pedidoNovo) {
+			pedido.setId(item.getIdPedido());
+			pedido.setDataPedido(new Date());
+			pedido.setIdCliente(item.getIdCliente());
+			pedido.getItems().add(item.getItem());
+			pedido.setStatus(StatusPedido.ABERTO);
+
+			PedidoRestService.pedidosMock.add(pedido);
+		}
+
+		logger.info("\n\n>O cliente " + item.getIdCliente() +
+					" adicionou o produto " + item.getItem().getIdProduto() +
+					" ao pedido " + item.getIdPedido() + "\n");
+
+		return pedido;
 	}
 
 	@POST
