@@ -5,7 +5,7 @@ public class UrlBuilder {
     final String BASE_URL = "http://localhost:";
     final String BASE_URL_USER_MS = "http://localhost:";
 
-    final int PORT_USER_MS = 8082;
+    final int PORT_USER_MS = 8081;
 
     int port = -1;
 

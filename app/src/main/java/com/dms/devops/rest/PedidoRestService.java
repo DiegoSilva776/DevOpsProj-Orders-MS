@@ -57,35 +57,39 @@ public class PedidoRestService {
 			throw new RuntimeException(Messages.MSG_ERROR_CRAZY_ERROR_OCURRED);
 		}
 
-		// Se o pedido já existe, adiciona o novo item
-		boolean pedidoNovo = true;
-			
-		for (Pedido pedido : PedidoRestService.pedidosMock) {
+		if (verifyClient(item.getIdCliente())) {
+			// Se o pedido já existe, adiciona o novo item
+			boolean pedidoNovo = true;
+				
+			for (Pedido pedido : PedidoRestService.pedidosMock) {
 
-			if (pedido.getId() == item.getIdPedido()) {
-				pedido.getItems().add(item.getItem());
-				pedidoNovo = false;
+				if (pedido.getId() == item.getIdPedido()) {
+					pedido.getItems().add(item.getItem());
+					pedidoNovo = false;
+				}
 			}
+
+			// Cria um novo pedido com o item, se o pedido ainda não existir
+			Pedido pedido = new Pedido();
+
+			if (pedidoNovo) {
+				pedido.setId(item.getIdPedido());
+				pedido.setDataPedido(new Date());
+				pedido.setIdCliente(item.getIdCliente());
+				pedido.getItems().add(item.getItem());
+				pedido.setStatus(StatusPedido.ABERTO);
+
+				PedidoRestService.pedidosMock.add(pedido);
+			}
+
+			logger.info("\n\n>O cliente " + item.getIdCliente() +
+						" adicionou o produto " + item.getItem().getIdProduto() +
+						" ao pedido " + item.getIdPedido() + "\n");
+
+			return pedido;
+		} else {
+			return null;
 		}
-
-		// Cria um novo pedido com o item, se o pedido ainda não existir
-		Pedido pedido = new Pedido();
-
-		if (pedidoNovo) {
-			pedido.setId(item.getIdPedido());
-			pedido.setDataPedido(new Date());
-			pedido.setIdCliente(item.getIdCliente());
-			pedido.getItems().add(item.getItem());
-			pedido.setStatus(StatusPedido.ABERTO);
-
-			PedidoRestService.pedidosMock.add(pedido);
-		}
-
-		logger.info("\n\n>O cliente " + item.getIdCliente() +
-					" adicionou o produto " + item.getItem().getIdProduto() +
-					" ao pedido " + item.getIdPedido() + "\n");
-
-		return pedido;
 	}
 
 	/**
