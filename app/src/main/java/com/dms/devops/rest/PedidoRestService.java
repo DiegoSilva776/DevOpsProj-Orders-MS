@@ -85,6 +85,8 @@ public class PedidoRestService {
 					" adicionou o produto " + item.getItem().getIdProduto() +
 					" ao pedido " + item.getIdPedido() + "\n");
 
+		// .
+
 		return pedido;
 	}
 
